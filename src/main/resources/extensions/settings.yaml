@@ -1,0 +1,58 @@
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: navidrome-settings
+spec:
+  forms:
+    - group: navidrome
+      label: Navidrome 设置
+      formSchema:
+        - $formkit: text
+          name: serverUrl
+          label: 服务地址
+          value: ""
+          validation: "required"
+          help: "例如：https://music.example.com"
+        - $formkit: text
+          name: username
+          label: 用户名
+          value: ""
+          validation: "required"
+        - $formkit: password
+          name: password
+          label: 密码
+          value: ""
+          validation: "required"
+        - $formkit: text
+          name: playlistId
+          label: 默认歌单 ID
+          value: ""
+          validation: "required"
+          help: "第一个默认歌单。可填写纯歌单 ID，也可直接粘贴 Navidrome 歌单页面链接，例如：https://music.example.com/app/#/playlist/xxxx/show"
+        - $formkit: list
+          name: extraPlaylistIds
+          label: 额外歌单 ID
+          value: []
+          addLabel: 添加歌单
+          children:
+            - $formkit: text
+              index: "$index"
+              validation: required
+              help: "可填写纯歌单 ID，也可直接粘贴 Navidrome 歌单页面链接"
+        - $formkit: checkbox
+          name: enablePlayer
+          label: 启用前台播放器
+          value: true
+          help: "开启后会自动注入可拖动播放器。歌单按钮会在右侧打开歌单切换侧栏。"
+        - $formkit: select
+          name: pjaxMode
+          label: PJAX 策略
+          value: "off"
+          help: "off：不接管跳转，最稳但翻页会中断播放。plugin：由插件自己接管前台 PJAX。theme-compatible：不拦截链接，只尽量兼容主题自身 PJAX，适合未来切换主题时尝试。"
+          options:
+            - label: 关闭（off）
+              value: off
+            - label: 插件内置（plugin）
+              value: plugin
+            - label: 兼容主题（theme-compatible）
+              value: theme-compatible

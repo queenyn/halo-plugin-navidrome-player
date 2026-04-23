@@ -1,0 +1,15 @@
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: navidrome-public-apis
+  labels:
+    halo.run/role-template: "true"
+    halo.run/hidden: "true"
+    rbac.authorization.halo.run/aggregate-to-anonymous: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "Navidrome"
+    rbac.authorization.halo.run/display-name: "Navidrome Public APIs"
+rules:
+  - apiGroups: ["ext.navidrome"]
+    resources: ["playlist", "playlists"]
+    verbs: ["get", "list"]

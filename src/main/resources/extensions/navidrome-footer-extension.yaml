@@ -1,0 +1,9 @@
+apiVersion: plugin.halo.run/v1alpha1
+kind: ExtensionDefinition
+metadata:
+  name: navidrome-footer-processor
+spec:
+  extensionPointName: template-footer-processor
+  className: run.halo.app.ext.navidrome.NavidromeFooterProcessor
+  displayName: "Navidrome Footer Processor"
+  description: "Injects APlayer resources and bootstrap script into <halo:footer/>."

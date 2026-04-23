@@ -1,0 +1,21 @@
+apiVersion: plugin.halo.run/v1alpha1
+kind: Plugin
+metadata:
+  name: navidrome
+spec:
+  enabled: true
+  requires: ">=2.24.0"
+  author:
+    name: queenyn
+    website: https://github.com/queenyn
+  logo: icon.png
+  settingName: navidrome-settings
+  configMapName: navidrome-configmap
+  homepage: https://github.com/queenyn/halo-plugin-navidrome-player
+  repo: https://github.com/queenyn/halo-plugin-navidrome-player
+  issues: https://github.com/queenyn/halo-plugin-navidrome-player/issues
+  displayName: "Navidrome 播放器"
+  description: "一款为 Halo 博客集成 Navidrome（Subsonic API）前台音乐播放器的插件，支持悬浮播放、歌单切换与前台连续听歌。"
+  license:
+    - name: "MIT"
+      url: "https://opensource.org/licenses/MIT"

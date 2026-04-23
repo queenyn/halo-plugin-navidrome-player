@@ -1,0 +1,9 @@
+apiVersion: plugin.halo.run/v1alpha1
+kind: ReverseProxy
+metadata:
+  name: navidrome-icon-proxy
+rules:
+  - path: /res/**
+    file:
+      directory: static
+      filename: icon.png
