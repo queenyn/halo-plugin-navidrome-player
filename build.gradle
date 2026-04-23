@@ -3,8 +3,43 @@ plugins {
     id 'run.halo.plugin.devtools' version '0.6.2'
 }
 
+def normalizePluginVersion(Object rawVersion) {
+    if (rawVersion == null) {
+        return null
+    }
+    def value = rawVersion.toString().trim()
+    if (!value) {
+        return null
+    }
+    return value.startsWith('v') ? value.substring(1) : value
+}
+
+def resolveGitTagVersion() {
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--exact-match'
+            standardOutput = stdout
+            errorOutput = new ByteArrayOutputStream()
+            ignoreExitValue = true
+        }
+        return normalizePluginVersion(stdout.toString())
+    } catch (Exception ignored) {
+        return null
+    }
+}
+
+def resolvePluginVersion() {
+    return normalizePluginVersion(findProperty('pluginVersion')) ?:
+        normalizePluginVersion(System.getenv('PLUGIN_VERSION')) ?:
+        normalizePluginVersion(System.getenv('GITHUB_REF_NAME')) ?:
+        normalizePluginVersion(System.getenv('GITHUB_REF')?.replace('refs/tags/', '')) ?:
+        resolveGitTagVersion() ?:
+        '0.1.0-SNAPSHOT'
+}
+
 group = 'run.halo.app.ext.navidrome'
-version = '4.7.0'
+version = resolvePluginVersion()
 
 repositories {
     mavenCentral()
