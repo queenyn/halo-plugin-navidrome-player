@@ -3,7 +3,7 @@ plugins {
     id 'run.halo.plugin.devtools' version '0.6.2'
 }
 
-def semverPattern = ~/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+ext.semverPattern = ~/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
 def normalizePluginVersion(Object rawVersion) {
     if (rawVersion == null) {
@@ -42,7 +42,7 @@ def resolvePluginVersion() {
         resolveGitTagVersion() ?:
         '0.1.0-SNAPSHOT'
 
-    if (!(resolved ==~ semverPattern) && resolved != '0.1.0-SNAPSHOT') {
+    if (!(resolved ==~ project.ext.semverPattern) && resolved != '0.1.0-SNAPSHOT') {
         throw new GradleException("Resolved plugin version '${resolved}' is not a valid semantic version. Please use tags like v4.7.2 or 4.7.2.")
     }
 
