@@ -3,6 +3,8 @@ plugins {
     id 'run.halo.plugin.devtools' version '0.6.2'
 }
 
+def semverPattern = ~/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+
 def normalizePluginVersion(Object rawVersion) {
     if (rawVersion == null) {
         return null
@@ -11,7 +13,10 @@ def normalizePluginVersion(Object rawVersion) {
     if (!value) {
         return null
     }
-    return value.startsWith('v') ? value.substring(1) : value
+    value = value.replaceFirst(/^refs\/tags\//, '')
+    value = value.replaceFirst(/^[vV]/, '')
+    value = value.replaceFirst(/^[^0-9]+/, '')
+    return value ?: null
 }
 
 def resolveGitTagVersion() {
@@ -30,12 +35,18 @@ def resolveGitTagVersion() {
 }
 
 def resolvePluginVersion() {
-    return normalizePluginVersion(findProperty('pluginVersion')) ?:
+    def resolved = normalizePluginVersion(findProperty('pluginVersion')) ?:
         normalizePluginVersion(System.getenv('PLUGIN_VERSION')) ?:
         normalizePluginVersion(System.getenv('GITHUB_REF_NAME')) ?:
         normalizePluginVersion(System.getenv('GITHUB_REF')?.replace('refs/tags/', '')) ?:
         resolveGitTagVersion() ?:
         '0.1.0-SNAPSHOT'
+
+    if (!(resolved ==~ semverPattern) && resolved != '0.1.0-SNAPSHOT') {
+        throw new GradleException("Resolved plugin version '${resolved}' is not a valid semantic version. Please use tags like v4.7.2 or 4.7.2.")
+    }
+
+    return resolved
 }
 
 group = 'run.halo.app.ext.navidrome'
